@@ -24,8 +24,9 @@
     #
     ####
 
-from xml.dom.minidom import parse, Node
-
+from io import StringIO
+from xml.dom.minidom import parse
+import lxml.etree as ET
 ##############################################################
 def xmlRemoveElement(elementName:str):
     nodes = document.getElementsByTagName(elementName)
@@ -57,7 +58,18 @@ for node in nodes:
 ## next step remove cac:Signature
 xmlRemoveElement("cac:Signature")
 
-print(document.toxml())
+
+#print(document.toxml())
+
+## XML Canonicalization C14N11
+
+et = ET.parse(document.toxml())
+output = StringIO.StringIO()
+et.write_c14n(output)
+print(output.getvalue())
+
+
+
 
 
 #with open("result.xml","w") as fs:
