@@ -24,9 +24,12 @@
     #
     ####
 
-from io import StringIO
+
 from xml.dom.minidom import parse
-import lxml.etree as ET
+
+
+
+
 ##############################################################
 def xmlRemoveElement(elementName:str):
     nodes = document.getElementsByTagName(elementName)
@@ -63,15 +66,60 @@ xmlRemoveElement("cac:Signature")
 
 ## XML Canonicalization C14N11
 
-et = ET.parse(document.toxml())
-output = StringIO.StringIO()
-et.write_c14n(output)
-print(output.getvalue())
 
 
+def Canonicalizing(XMLString:str):
+    #1- The document is encoded in UTF-8
+    TheXML = XMLString.encode('utf-8')
 
+    #2-Line breaks normalized to #xA on input, before parsing
+    TheXML = str(TheXML).replace("\\n", "#xA")
 
+    #3- Attribute values are normalized, as if by a validating processor
+
+    #4- Character and parsed entity references are replaced
+
+    #5- CDATA sections are replaced with their character content
+
+    #6- The XML declaration and document type declaration are removed
+
+    #7- The XML declaration and document type declaration are removed
+      
+    #8- Whitespace outside of the document element and within start and end tags is normalized
+
+    #9- All whitespace in character content is retained (excluding characters removed during line feed normalization)
+
+    #10- Attribute value delimiters are set to quotation marks (double quotes)
+    TheXML = str(TheXML).replace("'", "\"")
+
+    #11- Special characters in attribute values and character content are replaced by character references
+
+    #12 Superfluous namespace declarations are removed from each element
+
+    #13 Default attributes are added to each element
+
+    #14 Fixup of xml:base attributes [C14N-Issues] is performed
+
+    #15 Lexicographic order is imposed on the namespace declarations and attributes of each element
+    return TheXML
+
+##############################
+
+print(Canonicalizing(document.toxml()))
 
 #with open("result.xml","w") as fs:
 #    fs.write(document.toxml())
 #    fs.close()
+
+
+
+### pip install signxml
+#from lxml import etree
+#from signxml import XMLSigner, XMLVerifier
+
+#data_to_sign = "<Test/>"
+#cert = open("cert.pem").read()
+#key = open("privkey.pem").read()
+#root = etree.fromstring(data_to_sign)
+#signed_root = XMLSigner().sign(root, key=key, cert=cert)
+#verified_data = XMLVerifier().verify(signed_root).signed_xml
