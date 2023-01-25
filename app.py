@@ -26,7 +26,7 @@
 
 
 from xml.dom.minidom import parse
-
+import re
 
 
 
@@ -83,14 +83,16 @@ def Canonicalizing(XMLString:str):
 
     #6- The XML declaration and document type declaration are removed
 
-    #7- The XML declaration and document type declaration are removed
+    TheXML = re.sub("<!--.*-->","",TheXML)
+    TheXML = re.sub("<\?xml .*?>","",TheXML)
       
     #8- Whitespace outside of the document element and within start and end tags is normalized
-
+    TheXML = re.sub("\s>",">",TheXML)
     #9- All whitespace in character content is retained (excluding characters removed during line feed normalization)
-
+    TheXML = re.sub("\s\s"," ",TheXML)
     #10- Attribute value delimiters are set to quotation marks (double quotes)
     TheXML = str(TheXML).replace("'", "\"")
+
 
     #11- Special characters in attribute values and character content are replaced by character references
 
@@ -109,6 +111,7 @@ print(Canonicalizing(document.toxml()))
 
 #with open("result.xml","w") as fs:
 #    fs.write(document.toxml())
+# toprettyxml()
 #    fs.close()
 
 
